@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0f2f35">
+  <title>Arus — Manajemen Keuangan Usaha</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js"></script>
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <a class="brand" href="#"><span class="brand-mark">A</span><span>arus<span class="brand-dot">.</span><small>BUSINESS FINANCE</small></span></a>
+      <div class="side-label">MENU UTAMA</div>
+      <a class="nav-link active" href="#dashboard"><span class="nav-icon">▦</span> Dashboard</a>
+      <a class="nav-link" href="#transaksi"><span class="nav-icon">↕</span> Transaksi</a>
+      <a class="nav-link" href="#analitik"><span class="nav-icon">▥</span> Analitik</a>
+      <div class="side-label side-label-tools">PENGELOLAAN DATA</div>
+      <button class="nav-link nav-button" id="sidebarExport"><span class="nav-icon">⇩</span> Export laporan</button>
+      <button class="nav-link nav-button" id="sidebarBackup"><span class="nav-icon">◈</span> Backup data</button>
+      <div class="sidebar-bottom">
+        <div class="local-note"><span class="status-dot"></span><div><b>Data tersimpan lokal</b><small>Di browser perangkat ini</small></div></div>
+        <div class="sidebar-version">ARUS FINANCE · V1.0</div>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="topbar">
+        <button class="mobile-menu" id="menuToggle" aria-label="Buka menu">☰</button>
+        <div><div class="eyebrow">OVERVIEW</div><h1>Dashboard keuangan</h1></div>
+        <div class="topbar-actions">
+          <span class="today-label" id="todayLabel"></span>
+          <button class="btn btn-primary-soft" id="topAddBtn">＋ <span>Tambah transaksi</span></button>
+        </div>
+      </header>
+
+      <section id="dashboard">
+        <div class="welcome-row"><div><h2>Ringkasan usaha</h2><p>Pantau kondisi keuangan bisnismu dalam satu tempat.</p></div><span class="live-pill"><i></i> LIVE OVERVIEW</span></div>
+        <div class="summary-grid">
+          <article class="summary-card balance-card">
+            <div class="card-top"><span>Total saldo kas</span><span class="metric-icon">◉</span></div>
+            <div class="metric-value" id="totalBalance">Rp0</div>
+            <div class="metric-foot"><span class="metric-dot"></span> Saldo bersih seluruh kas usaha</div>
+          </article>
+          <article class="summary-card">
+            <div class="card-top"><span>Total pemasukan</span><span class="metric-icon green">↗</span></div>
+            <div class="metric-value" id="totalIncome">Rp0</div>
+            <div class="metric-foot">Akumulasi omzet dan modal masuk</div>
+          </article>
+          <article class="summary-card">
+            <div class="card-top"><span>Total pengeluaran</span><span class="metric-icon red">↘</span></div>
+            <div class="metric-value" id="totalExpense">Rp0</div>
+            <div class="metric-foot">Operasional, delivery, dan gaji</div>
+          </article>
+          <article class="summary-card">
+            <div class="card-top"><span>Dana darurat</span><span class="metric-icon amber">◇</span></div>
+            <div class="metric-value" id="emergencyBalance">Rp0</div>
+            <div class="metric-foot">Dana cadangan yang tersedia</div>
+          </article>
+        </div>
+        <div class="secondary-strip">
+          <div><span class="strip-label">KAS OPERASIONAL TERSEDIA</span><strong id="operationalBalance">Rp0</strong></div>
+          <div class="strip-divider"></div>
+          <div><span class="strip-label">JUMLAH TRANSAKSI</span><strong id="transactionCount">0 transaksi</strong></div>
+          <div class="strip-hint">Alokasi dana darurat adalah pemindahan saldo, bukan biaya operasional.</div>
+        </div>
+      </section>
+
+      <section class="content-section" id="analitik">
+        <div class="section-heading"><div><h2>Analitik keuangan</h2><p>Visualisasi arus uang berdasarkan transaksi yang tercatat.</p></div>
+          <select id="chartYear" class="form-select year-select" aria-label="Pilih tahun"></select>
+        </div>
+        <div class="chart-grid">
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Komposisi pengeluaran</h3><p>Proporsi biaya per kategori</p></div><span class="chart-tag">KATEGORI</span></div><div class="donut-wrap"><canvas id="expenseChart" aria-label="Grafik pengeluaran per kategori"></canvas><div class="donut-center"><b id="donutTotal">Rp0</b><span>Total biaya</span></div></div><div id="expenseLegend" class="chart-legend"></div></article>
+          <article class="panel chart-panel"><div class="panel-heading"><div><h3>Pemasukan vs pengeluaran</h3><p>Perbandingan bulanan</p></div><span class="chart-tag">BULANAN</span></div><div class="bar-wrap"><canvas id="monthlyChart" aria-label="Grafik pemasukan dan pengeluaran bulanan"></canvas></div><div class="chart-foot"><span><i class="legend-dot income-dot"></i>Pemasukan</span><span><i class="legend-dot expense-dot"></i>Pengeluaran</span></div></article>
+        </div>
+      </section>
+
+      <section class="content-section" id="transaksi">
+        <div class="section-heading transaction-heading"><div><h2>Riwayat transaksi</h2><p>Kelola dan telusuri seluruh aktivitas keuangan usaha.</p></div><button class="btn btn-primary" id="addTransactionBtn">＋ Tambah transaksi</button></div>
+        <article class="panel table-panel">
+          <div class="table-toolbar">
+            <div class="search-box"><span>⌕</span><input id="searchInput" type="search" placeholder="Cari catatan atau kategori..." aria-label="Cari transaksi"></div>
+            <div class="filter-group">
+              <select id="categoryFilter" class="form-select"><option value="">Semua kategori</option><option>Operasional</option><option>Delivery / Logistik</option><option>Gaji Karyawan</option><option>Modal / Omzet</option><option>Dana Darurat</option></select>
+              <input id="monthFilter" class="form-control" type="month" aria-label="Filter bulan">
+              <button class="btn btn-light-outline" id="resetFilters">Reset</button>
+            </div>
+          </div>
+          <div class="table-responsive">
+            <table class="table align-middle transaction-table">
+              <thead><tr><th>TANGGAL</th><th>DESKRIPSI</th><th>KATEGORI</th><th>JENIS</th><th class="text-end">NOMINAL</th><th class="text-center">AKSI</th></tr></thead>
+              <tbody id="transactionBody"></tbody>
+            </table>
+          </div>
+          <div class="table-bottom"><span id="tableCount">Menampilkan 0 transaksi</span><span>Data disimpan otomatis</span></div>
+        </article>
+      </section>
+
+      <footer class="footer"><span>© 2026 Arus Finance</span><span>Dibuat untuk membantu usaha tetap terarah.</span></footer>
+    </main>
+  </div>
+
+  <div class="modal fade" id="transactionModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered"><div class="modal-content">
+      <div class="modal-header"><div><span class="modal-kicker">CATAT KEUANGAN</span><h2 class="modal-title" id="modalTitle">Tambah transaksi</h2></div><button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button></div>
+      <form id="transactionForm">
+        <div class="modal-body">
+          <input type="hidden" id="editId">
+          <div class="mb-3"><label class="form-label" for="transactionDate">Tanggal transaksi</label><input class="form-control" type="date" id="transactionDate" required></div>
+          <div class="mb-3"><label class="form-label" for="transactionType">Jenis transaksi</label><select class="form-select" id="transactionType" required><option value="income">Pemasukan</option><option value="expense">Pengeluaran</option><option value="allocation">Alokasi dana darurat</option><option value="withdrawal">Penarikan dana darurat</option></select></div>
+          <div class="mb-3"><label class="form-label" for="transactionCategory">Kategori</label><select class="form-select" id="transactionCategory" required></select><div class="form-text" id="categoryHelp">Pilih kategori yang sesuai.</div></div>
+          <div class="mb-3"><label class="form-label" for="transactionAmount">Nominal (Rp)</label><div class="amount-input"><span>Rp</span><input class="form-control" id="transactionAmount" inputmode="numeric" autocomplete="off" placeholder="0" required></div></div>
+          <div><label class="form-label" for="transactionNote">Catatan / deskripsi</label><input class="form-control" id="transactionNote" maxlength="100" placeholder="Contoh: Pembelian bahan baku" required></div>
+          <div class="form-hint"><span>ⓘ</span> Data transaksi tersimpan di browser perangkat ini.</div>
+        </div>
+        <div class="modal-footer"><button type="button" class="btn btn-light-outline" data-bs-dismiss="modal">Batal</button><button type="submit" class="btn btn-primary" id="saveTransactionBtn">Simpan transaksi</button></div>
+      </form>
+    </div></div>
+  </div>
+
+  <div class="toast-container position-fixed bottom-0 end-0 p-3"><div id="appToast" class="toast app-toast" role="status" aria-live="polite" aria-atomic="true"><div class="toast-body"><span class="toast-check">✓</span><span id="toastMessage">Berhasil disimpan</span></div></div></div>
+  <input type="file" id="restoreInput" accept=".json,application/json" hidden>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
